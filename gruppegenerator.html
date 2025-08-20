@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="nn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lag tilfeldige grupper 🪄</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --body-bg: #2c2c2c;
+            --body-color: #ecf0f1;
+            --card-bg: #3b3b3b;
+            --input-bg: #272727;
+            --border-color: #4a4a4a;
+            --primary-color: #3498db;
+            --primary-hover-color: #2980b9;
+            --secondary-color: #4f4f4f;
+            --secondary-hover-color: #5f5f5f;
+            --green-color: #27ae60;
+            --green-hover-color: #229954;
+            --red-color: #c0392b;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* Grunnleggjande stil */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--body-bg);
+            color: var(--body-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        /* Hovud-container */
+        .main-container {
+            position: relative; /* Nødvendig for absolutt posisjonering av omstart-knapp */
+            width: 100%;
+            max-width: 56rem; /* tilsvarer max-w-4xl */
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin-top: 0.5rem;
+            color: #bdc3c7;
+        }
+
+        /* Guide-boks */
+        .guide-box {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 0.5rem;
+        }
+
+        .guide-box h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-box ol {
+            list-style-position: inside;
+            list-style-type: decimal;
+            padding-left: 0.5rem;
+        }
+        
+        .guide-box li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Skjemaelement */
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--input-bg);
+            color: var(--body-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-family: var(--font-sans);
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Knappar */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #load-names-button {
+            flex-grow: 1;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        #load-names-button:hover {
+            background-color: var(--primary-hover-color);
+        }
+
+        #clear-button {
+            background-color: var(--secondary-color);
+            color: var(--body-color);
+            padding: 0.75rem;
+        }
+        
+        #clear-button:hover {
+            background-color: var(--secondary-hover-color);
+        }
+
+        #clear-button svg {
+            display: block;
+        }
+
+        #restart-button {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background-color: transparent;
+            color: #95a5a6;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        #restart-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--body-color);
+        }
+
+        #generate-button {
+            background-color: var(--green-color);
+            color: white;
+            width: 100%;
+        }
+        
+        #generate-button:hover {
+            background-color: var(--green-hover-color);
+        }
+
+        /* Steg 2 */
+        #step2-container {
+            margin-top: 2rem;
+        }
+
+        #step2-container h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        #student-selection-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 0.75rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .student-checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+        
+        .student-checkbox-item:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .student-checkbox-item input {
+            width: 1.15rem;
+            height: 1.15rem;
+            margin-right: 0.75rem;
+            accent-color: var(--primary-color);
+        }
+
+        .group-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .group-controls > div {
+             display: flex;
+             align-items: center;
+             gap: 0.5rem;
+        }
+
+        input[type="number"] {
+            width: 5rem;
+            padding: 0.5rem;
+            text-align: center;
+            background-color: var(--input-bg);
+            color: var(--body-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+        }
+
+        /* Resultat */
+        #results-container {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .group-card {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .group-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .group-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background-color: var(--secondary-color);
+            color: var(--body-color);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        .copy-btn.copied {
+            background-color: var(--green-color) !important;
+            color: white !important;
+        }
+
+        .group-card ul {
+            list-style: none;
+        }
+        
+        .group-card li {
+            padding: 0.25rem 0;
+        }
+        
+        /* Feilmelding */
+        #error-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: rgba(192, 57, 43, 0.2);
+            color: var(--red-color);
+            border: 1px solid var(--red-color);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 2rem;
+            font-family: var(--font-mono);
+            color: #95a5a6;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        footer a:hover {
+            color: var(--primary-color);
+        }
+
+        footer svg {
+            width: 1.2rem;
+            height: 1.2rem;
+            fill: currentColor;
+        }
+
+        /* Hjelpeklassar */
+        .hidden {
+            display: none !important;
+        }
+
+        @media (min-width: 640px) {
+            #generate-button {
+                width: auto;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <button id="restart-button" aria-label="Start på nytt">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+        </button>
+        <header>
+            <h1>Lag tilfeldige grupper</h1>
+            <p>Laga for klasselister frå <strong>Visma InSchool</strong>.</p>
+        </header>
+
+        <div class="guide-box">
+            <h2>Slik gjer du:</h2>
+            <ol>
+                <li>Skriv ut elevliste frå Visma InSchool (elevliste med bilete, inkluder namneliste).</li>
+                <li>Kopier <strong>heile</strong> tabellen med namnelista (nummer, klasse, elevnamn, faglærarnamn).</li>
+                <li>Lim inn lista i tekstfeltet under og trykk "Hent elevar".</li>
+                <li>Fjern haka ved elevar som eventuelt ikkje skal vere med.</li>
+                <li>Vel ønskt tal på grupper og trykk "Lag grupper".</li>
+            </ol>
+        </div>
+
+        <main>
+            <div id="step1-container">
+                <div style="margin-bottom: 1rem;">
+                    <label for="student-list">Elevliste</label>
+                    <textarea id="student-list" rows="10" placeholder="Lim inn heile klasselista frå Visma InSchool her...&#10;&#10;Døme:&#10;01 1STA Ola Nordmann Peder Ås&#10;02 1STA Kari Nordmann Peder Ås"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="load-names-button">Hent elevar</button>
+                    <button id="clear-button" aria-label="Tøm lista">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="step2-container" class="hidden">
+                <h2>Vel elevar som skal vere med</h2>
+                <div id="student-selection-list"></div>
+                <div class="group-controls">
+                    <div>
+                        <label for="group-count">Tal på grupper:</label>
+                        <input type="number" id="group-count" value="2" min="1">
+                    </div>
+                    <button id="generate-button">Lag grupper</button>
+                </div>
+            </div>
+            
+            <div id="error-message" class="hidden"></div>
+            <div id="results-container"></div>
+        </main>
+    </div>
+
+    <footer>
+        <a href="https://github.com/lektorodd/gruppegenerator" target="_blank" rel="noopener noreferrer">
+            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+            lektorodd
+        </a>
+    </footer>
+
+    <script>
+        // Hent DOM-element
+        const studentListInput = document.getElementById('student-list');
+        const loadNamesButton = document.getElementById('load-names-button');
+        const clearButton = document.getElementById('clear-button');
+        const restartButton = document.getElementById('restart-button');
+        const generateButton = document.getElementById('generate-button');
+        const groupCountInput = document.getElementById('group-count');
+        const step1Container = document.getElementById('step1-container');
+        const step2Container = document.getElementById('step2-container');
+        const studentSelectionList = document.getElementById('student-selection-list');
+        const resultsContainer = document.getElementById('results-container');
+        const errorMessage = document.getElementById('error-message');
+
+        loadNamesButton.addEventListener('click', loadAndDisplayNames);
+        generateButton.addEventListener('click', generateGroups);
+        clearButton.addEventListener('click', clearAll);
+        restartButton.addEventListener('click', clearAll);
+
+
+        function clearAll() {
+            studentListInput.value = '';
+            studentSelectionList.innerHTML = '';
+            resultsContainer.innerHTML = '';
+            errorMessage.classList.add('hidden');
+            step2Container.classList.add('hidden');
+            step1Container.classList.remove('hidden');
+            studentListInput.focus();
+        }
+
+        function loadAndDisplayNames() {
+            errorMessage.classList.add('hidden');
+            resultsContainer.innerHTML = '';
+            studentSelectionList.innerHTML = '';
+
+            const rawText = studentListInput.value.trim();
+            if (rawText === '') {
+                showError("Elevlista kan ikkje vere tom.");
+                return;
+            }
+            const lines = rawText.split('\n').filter(line => line.trim() !== '');
+
+            try {
+                const studentNames = parseStudentNames(lines);
+                if (studentNames.length === 0) {
+                    showError("Fann ingen gyldige elevnamn i lista. Sjekk formatet.");
+                    return;
+                }
+
+                studentNames.forEach((name, index) => {
+                    const id = `student-${index}`;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'student-checkbox-item';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = id;
+                    checkbox.checked = true;
+                    checkbox.dataset.name = name;
+                    const label = document.createElement('label');
+                    label.htmlFor = id;
+                    label.textContent = name;
+                    label.className = 'cursor-pointer select-none';
+                    itemDiv.appendChild(checkbox);
+                    itemDiv.appendChild(label);
+                    studentSelectionList.appendChild(itemDiv);
+                });
+
+                step1Container.classList.add('hidden');
+                step2Container.classList.remove('hidden');
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function generateGroups() {
+            errorMessage.classList.add('hidden');
+            resultsContainer.innerHTML = '';
+
+            const selectedCheckboxes = studentSelectionList.querySelectorAll('input[type="checkbox"]:checked');
+            const selectedStudents = Array.from(selectedCheckboxes).map(cb => cb.dataset.name);
+            const numGroups = parseInt(groupCountInput.value, 10);
+
+            if (selectedStudents.length === 0) {
+                showError("Du må velje minst éin elev.");
+                return;
+            }
+            if (isNaN(numGroups) || numGroups < 1) {
+                showError("Talet på grupper må vere eit positivt tal.");
+                return;
+            }
+            if (numGroups > selectedStudents.length) {
+                showError("Du kan ikkje ha fleire grupper enn valde elevar.");
+                return;
+            }
+
+            const shuffledStudents = shuffleArray(selectedStudents);
+            const groups = createGroups(shuffledStudents, numGroups);
+            displayGroups(groups);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        function parseStudentNames(lines) {
+            if (lines.length < 2 && lines.length > 0) {
+                 const words = lines[0].trim().split(/\s+/);
+                 if (words.length < 3) throw new Error("Kvar linje må innehalde minst nummer, klasse og eitt fornamn.");
+                 return [words[2]];
+            }
+            if (lines.length === 0) return [];
+            
+            const words1 = lines[0].trim().split(/\s+/);
+            const words2 = lines[1].trim().split(/\s+/);
+            let teacherNameWords = [];
+            let i = 1;
+            while (
+                words1.length - i >= 0 &&
+                words2.length - i >= 0 &&
+                words1[words1.length - i] === words2[words2.length - i]
+            ) {
+                teacherNameWords.unshift(words1[words1.length - i]);
+                i++;
+            }
+            
+            if (teacherNameWords.length === 0 && lines.length > 1) {
+                throw new Error("Kunne ikkje identifisere eit felles lærarnamn. Sjekk formatet.");
+            }
+            const teacherName = teacherNameWords.join(' ');
+
+            const students = lines.map(line => {
+                const trimmedLine = line.trim();
+                const studentPart = trimmedLine.substring(0, trimmedLine.lastIndexOf(teacherName)).trim();
+                const parts = studentPart.split(/\s+/);
+                if (parts.length < 3) return null;
+                
+                const firstName = parts[2];
+                const lastNameParts = parts.slice(3);
+                return { firstName, lastNameParts };
+            }).filter(Boolean);
+
+            const firstNameCounts = students.reduce((acc, student) => {
+                acc[student.firstName] = (acc[student.firstName] || 0) + 1;
+                return acc;
+            }, {});
+
+            return students.map(student => {
+                if (firstNameCounts[student.firstName] > 1 && student.lastNameParts.length > 0) {
+                    const initials = student.lastNameParts.map(part => part.charAt(0).toUpperCase() + '.').join(' ');
+                    return `${student.firstName} ${initials}`;
+                }
+                return student.firstName;
+            });
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function createGroups(students, numGroups) {
+            const groups = Array.from({ length: numGroups }, () => []);
+            students.forEach((student, index) => {
+                groups[index % numGroups].push(student);
+            });
+            return groups;
+        }
+
+        function displayGroups(groups) {
+            resultsContainer.innerHTML = '';
+            groups.forEach((group, index) => {
+                const groupCard = document.createElement('div');
+                groupCard.className = 'group-card';
+                
+                const header = document.createElement('div');
+                header.className = 'group-card-header';
+                
+                const title = document.createElement('h3');
+                title.textContent = `Gruppe ${index + 1}`;
+                
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.textContent = 'Kopier';
+                copyButton.onclick = () => copyGroupToClipboard(group, copyButton);
+                
+                header.appendChild(title);
+                header.appendChild(copyButton);
+                
+                const list = document.createElement('ul');
+                group.forEach(student => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = student;
+                    list.appendChild(listItem);
+                });
+                
+                groupCard.appendChild(header);
+                groupCard.appendChild(list);
+                resultsContainer.appendChild(groupCard);
+            });
+        }
+        
+        function copyGroupToClipboard(group, button) {
+            const textToCopy = `Gruppe ${button.previousElementSibling.textContent.split(' ')[1]}:\n` + group.join('\n');
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Kopiert!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Kopier';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('Kunne ikkje kopiere tekst: ', err);
+                showError("Kopiering til utklippstavla mislykkast.");
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
