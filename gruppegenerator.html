@@ -3,618 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lag tilfeldige grupper 🪄</title>
+    <title>Terningtrillar for Grupper</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --body-bg: #2c2c2c;
-            --body-color: #ecf0f1;
-            --card-bg: #3b3b3b;
-            --input-bg: #272727;
-            --border-color: #4a4a4a;
-            --primary-color: #3498db;
-            --primary-hover-color: #2980b9;
-            --secondary-color: #4f4f4f;
-            --secondary-hover-color: #5f5f5f;
-            --green-color: #27ae60;
-            --green-hover-color: #229954;
-            --red-color: #c0392b;
-            --font-sans: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        /* Grunnleggjande stil */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { font-size: 16px; }
+        /* Grunnleggjande stilar for sida */
         body {
-            font-family: var(--font-sans);
-            background-color: var(--body-bg);
-            color: var(--body-color);
+            font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 1.5rem;
+            margin: 0;
+            padding: 2rem 1rem;
+            background: #2c2c2c;
+            color: #ecf0f1;
+            box-sizing: border-box;
         }
 
-        /* Hovud-container */
-        .main-container {
+        /* Hovudbehaldar for appen */
+        .container {
             position: relative;
             width: 100%;
-            max-width: 56rem;
-            background-color: var(--card-bg);
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+            max-width: 960px;
+            text-align: center;
+            background-color: rgba(59, 59, 59, 0.7);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(236, 240, 241, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin-top: 0;
             margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #ecf0f1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
-        header { text-align: center; margin-bottom: 1.5rem; }
-        h1 { font-size: 2.25rem; font-weight: 700; }
-        header p { margin-top: 0.5rem; color: #bdc3c7; }
-
-        /* Guide-boks */
-        .guide-box {
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background-color: rgba(52, 152, 219, 0.1);
-            border: 1px solid var(--primary-color);
-            border-radius: 0.5rem;
+        /* Gøymer element */
+        .hidden {
+            display: none;
         }
-        .guide-box h2 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .guide-box ol { list-style-position: inside; list-style-type: decimal; padding-left: 0.5rem; }
-        .guide-box li { margin-bottom: 0.25rem; }
 
-        /* Skjemaelement */
-        label { display: block; font-weight: 500; margin-bottom: 0.5rem; }
-        textarea {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--input-bg);
-            color: var(--body-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            font-family: var(--font-sans);
-            resize: vertical;
-            min-height: 150px;
+        /* Stil for oppsettsskjemaet */
+        #setup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-group label {
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #adb5bd;
+        }
+        .form-group input {
+            padding: 10px 14px;
+            border: 1px solid rgba(236, 240, 241, 0.2);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Inter', sans-serif;
+            width: 80px;
+            text-align: center;
+            background-color: #3b3b3b;
+            color: #ecf0f1;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
-        textarea:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: #3498db;
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
         }
-
-        /* Knappar */
-        .button-group { display: flex; gap: 1rem; margin-top: 1rem; }
-        button {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
+        
+        /* Behaldar for alle gruppene */
+        #game-board {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
         }
-        button:active { transform: scale(0.98); }
+        
+        #game-board.two-columns {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem 2rem;
+        }
+        
+        .group-container {
+            border: 1px solid rgba(236, 240, 241, 0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            background-color: rgba(44, 44, 44, 0.4);
+        }
+        
+        .group-container.single-group {
+            border: none;
+            padding: 0;
+            background-color: transparent;
+        }
+        
+        .group-container h2 {
+            margin: 0 0 0.75rem 0;
+            color: #ced4da;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
 
-        .btn-primary { flex-grow: 1; background-color: var(--primary-color); color: white; }
-        .btn-primary:hover { background-color: var(--primary-hover-color); }
-        .btn-secondary { flex-grow: 1; background-color: var(--secondary-color); color: var(--body-color); }
-        .btn-secondary:hover { background-color: var(--secondary-hover-color); }
+        .dice-row {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
+        .die {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+        
+        .die svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+        }
+
+        @keyframes roll {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .rolling {
+            animation: roll 0.6s ease-out;
+        }
+
+        /* Stil for knappegruppa i botn */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+        
+        .btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+        }
+        
+        .btn-primary {
+            font-size: 1.2rem;
+            padding: 14px 28px;
+            background-image: linear-gradient(90deg, #3498db, #9E52FF);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        /* Stil for ikon-knappar */
+        .btn-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #3b3b3b;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-icon:hover {
+            background-color: #495057;
+            transform: translateY(-2px);
+        }
+        
+        .btn-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: #ecf0f1;
+        }
+
+        /* Usynleg element for sentrering */
+        .ghost-button {
+            width: 44px;
+            visibility: hidden;
+        }
+        
         #restart-button {
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            background-color: transparent;
-            color: #95a5a6;
-            padding: 0.5rem;
-            border-radius: 50%;
         }
-        #restart-button:hover { background-color: var(--secondary-color); color: var(--body-color); }
-
-        #generate-groups-button { background-color: var(--green-color); color: white; width: 100%; }
-        #generate-groups-button:hover { background-color: var(--green-hover-color); }
-
-        /* Seksjonar for steg 2 */
-        .step2-section { margin-top: 2rem; }
-        .step2-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
-
-        #student-selection-list {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 0.75rem;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        
+        /* Språkveljar */
+        #language-switcher {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            display: flex;
             gap: 0.5rem;
+            z-index: 10;
         }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            transition: background-color 0.2s;
+        .lang-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background-color: #3b3b3b;
+            color: #ecf0f1;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            /* ENDRING: Mindre padding og font-size */
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.6;
+            font-size: 0.8rem;
         }
-        .checkbox-item:hover { background-color: var(--secondary-color); }
-        .checkbox-item input { width: 1.15rem; height: 1.15rem; margin-right: 0.75rem; accent-color: var(--primary-color); }
+        .lang-btn:hover {
+            opacity: 1;
+            background-color: #495057;
+        }
+        .lang-btn.active {
+            opacity: 1;
+            border-color: #3498db;
+        }
         
-        .group-controls {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        .group-controls > div { display: flex; align-items: center; gap: 0.5rem; }
-        input[type="number"] {
-            width: 5rem;
-            padding: 0.5rem;
-            text-align: center;
-            background-color: var(--input-bg);
-            color: var(--body-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-        }
-
-        /* Resultat */
-        #results-container {
+        footer {
             margin-top: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        .group-card { background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; }
-        .group-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-        .group-card h3 { font-size: 1.125rem; font-weight: 600; }
-        .copy-btn { background-color: var(--secondary-color); color: var(--body-color); font-size: 0.75rem; padding: 0.25rem 0.5rem; }
-        .copy-btn.copied { background-color: var(--green-color) !important; color: white !important; }
-        .group-card ul { list-style: none; }
-        .group-card li { padding: 0.25rem 0; }
-        
-        /* Klasseliste-spesifikt */
-        .controls-container { display: flex; flex-direction: column; gap: 1.5rem; }
-        @media (min-width: 768px) { .controls-container { flex-direction: row; } }
-        .control-group { flex: 1; }
-
-        #column-selection { display: flex; flex-direction: column; gap: 0.5rem; }
-        .draggable-item { cursor: grab; display: flex; align-items: center; padding: 0.5rem; border-radius: 0.25rem; background-color: var(--input-bg); border: 1px solid var(--border-color); }
-        .draggable-item.dragging { opacity: 0.5; }
-        .draggable-item .checkbox-item { flex-grow: 1; }
-        
-        #sort-options { display: flex; flex-direction: column; gap: 0.5rem; }
-        
-        #classlist-output {
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            white-space: pre-wrap; /* Endra for betre linjeskift */
-            font-family: var(--font-sans); /* Endra frå monospace */
-            overflow-x: auto;
-            min-height: 100px;
-            line-height: 1.5;
-        }
-        #copy-list-button { margin-top: 1rem; width: 100%; }
-
-        /* Feilmelding */
-        #error-message {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            background-color: rgba(192, 57, 43, 0.2);
-            color: var(--red-color);
-            border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
             text-align: center;
         }
-
-        /* Footer */
-        footer { margin-top: 2rem; font-family: var(--font-mono); color: #95a5a6; font-size: 0.875rem; text-align: center; }
-        footer a { color: #bdc3c7; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
-        footer a:hover { color: var(--primary-color); }
-        footer svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
-
-        /* Hjelpeklassar */
-        .hidden { display: none !important; }
-        @media (min-width: 640px) { #generate-groups-button { width: auto; } #copy-list-button { width: auto; } }
+        footer a {
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(236, 240, 241, 0.5);
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s ease;
+        }
+        footer a:hover {
+            color: #ecf0f1;
+        }
+        footer svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <button id="restart-button" aria-label="Start på nytt">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+    <div class="container">
+        <div id="language-switcher">
+            <button data-lang="nn" class="lang-btn">🇳🇴 NN</button>
+            <button data-lang="nb" class="lang-btn">🇳🇴 NB</button>
+            <button data-lang="en" class="lang-btn">🇬🇧 EN</button>
+        </div>
+        <button id="restart-button" class="btn btn-icon hidden" title="Innstillingar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M290.74 93.24l128.02 128.02-277.99 277.99-114.14 12.6C11.35 513.54-1.56 500.62.14 485.34l12.6-114.14 277.99-277.99zm207.2-19.06l-60.11-60.11c-18.75-18.75-49.16-18.75-67.91 0l-56.55 56.55 128.02 128.02 56.55-56.55c18.75-18.75 18.75-49.16 0-67.91z"/></svg>
         </button>
-        <header>
-            <h1>Verktøy for klasselister</h1>
-            <p>Laga for klasselister frå <strong>Visma InSchool</strong>.</p>
-        </header>
+        <h1 data-key="mainTitle">Terningtrillar</h1>
 
-        <div id="guide-container" class="guide-box">
-            <h2>Slik gjer du:</h2>
-            <ol>
-                <li>Skriv ut elevliste frå Visma InSchool (elevliste med bilete, inkluder namneliste).</li>
-                <li>Kopier <strong>heile</strong> tabellen med namnelista (nummer, klasse, elevnamn, faglærarnamn).</li>
-                <li>Lim inn lista i tekstfeltet under og vel ein av funksjonane.</li>
-            </ol>
+        <div id="setup-container">
+            <form id="setup-form">
+                <div class="form-group">
+                    <label for="num-groups" data-key="groupsLabel">Tal på grupper</label>
+                    <input type="number" id="num-groups" value="1" min="1" max="10">
+                </div>
+                <div class="form-group">
+                    <label for="num-dice" data-key="diceLabel">Terningar per gruppe</label>
+                    <input type="number" id="num-dice" value="5" min="1" max="10">
+                </div>
+                <button type="submit" class="btn btn-primary" data-key="startButton">Start spel</button>
+            </form>
         </div>
 
-        <main>
-            <div id="step1-container">
-                <div style="margin-bottom: 1rem;">
-                    <label for="student-list">Elevliste</label>
-                    <textarea id="student-list" rows="10" placeholder="Lim inn heile klasselista frå Visma InSchool her...&#10;&#10;Døme:&#10;01 1STA Ola Nordmann Peder Ås&#10;02 1STA Kari Nordmann Peder Ås"></textarea>
-                </div>
-                <div class="button-group">
-                    <button id="classlist-init-button" class="btn-secondary">Lag klasseliste</button>
-                    <button id="groups-init-button" class="btn-primary">Lag tilfeldige grupper</button>
-                </div>
+        <div id="game-container" class="hidden">
+            <div id="game-board"></div>
+            <div class="button-group">
+                <div class="ghost-button"></div>
+                <button id="roll-button" class="btn btn-primary" data-key="rollButton">Trill terningar</button>
+                <button id="clear-button" class="btn btn-icon" title="Tøm" data-key="clearButtonTitle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                </button>
             </div>
-
-            <div id="groups-setup-container" class="step2-section hidden">
-                <h2>Vel elevar som skal vere med i gruppeinndelinga</h2>
-                <div id="student-selection-list"></div>
-                <div class="group-controls">
-                    <div>
-                        <label for="group-count">Tal på grupper:</label>
-                        <input type="number" id="group-count" value="2" min="1">
-                    </div>
-                    <button id="generate-groups-button">Lag grupper</button>
-                </div>
-            </div>
-
-            <div id="classlist-setup-container" class="step2-section hidden">
-                <div class="controls-container">
-                    <div class="control-group">
-                        <h2>Sortering</h2>
-                        <div id="sort-options"></div>
-                    </div>
-                    <div class="control-group">
-                        <h2>Kolonnerekkefølgje (dra for å endre)</h2>
-                        <div id="column-selection"></div>
-                    </div>
-                </div>
-                <h2 style="margin-top: 1.5rem;">Resultat</h2>
-                <pre id="classlist-output"></pre>
-                <button id="copy-list-button" class="btn-primary">Kopier liste</button>
-            </div>
-            
-            <div id="error-message" class="hidden"></div>
-            <div id="results-container"></div>
-        </main>
+        </div>
     </div>
 
     <footer>
-        <a href="https://github.com/lektorodd/gruppegenerator" target="_blank" rel="noopener noreferrer">
-            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <a href="https://github.com/lektorodd/terningtrillar" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
             lektorodd
         </a>
     </footer>
 
     <script>
-        let studentData = [];
-        let columnOrder = ['fornamn', 'etternamn', 'klasse'];
-        const columnDetails = { fornamn: 'Fornamn', etternamn: 'Etternamn', klasse: 'Klasse' };
-
-        const studentListInput = document.getElementById('student-list');
+        // Hentar element frå HTML
+        const setupContainer = document.getElementById('setup-container');
+        const setupForm = document.getElementById('setup-form');
+        const gameContainer = document.getElementById('game-container');
+        const gameBoard = document.getElementById('game-board');
+        const rollButton = document.getElementById('roll-button');
         const restartButton = document.getElementById('restart-button');
-        const guideContainer = document.getElementById('guide-container');
-        const step1Container = document.getElementById('step1-container');
-        const classlistInitButton = document.getElementById('classlist-init-button');
-        const groupsInitButton = document.getElementById('groups-init-button');
-        const groupsSetupContainer = document.getElementById('groups-setup-container');
-        const studentSelectionList = document.getElementById('student-selection-list');
-        const groupCountInput = document.getElementById('group-count');
-        const generateGroupsButton = document.getElementById('generate-groups-button');
-        const classlistSetupContainer = document.getElementById('classlist-setup-container');
-        const sortOptionsContainer = document.getElementById('sort-options');
-        const columnSelectionContainer = document.getElementById('column-selection');
-        const classlistOutput = document.getElementById('classlist-output');
-        const copyListButton = document.getElementById('copy-list-button');
-        const resultsContainer = document.getElementById('results-container');
-        const errorMessage = document.getElementById('error-message');
+        const clearButton = document.getElementById('clear-button');
 
-        restartButton.addEventListener('click', clearAll);
-        classlistInitButton.addEventListener('click', initClasslistGenerator);
-        groupsInitButton.addEventListener('click', initGroupsGenerator);
-        generateGroupsButton.addEventListener('click', generateGroups);
-        copyListButton.addEventListener('click', copyClasslist);
-
-        function clearAll() {
-            studentData = [];
-            columnOrder = ['fornamn', 'etternamn', 'klasse'];
-            studentListInput.value = '';
-            [studentSelectionList, resultsContainer, classlistOutput, columnSelectionContainer, sortOptionsContainer].forEach(el => el.innerHTML = '');
-            [errorMessage, groupsSetupContainer, classlistSetupContainer].forEach(el => el.classList.add('hidden'));
-            step1Container.classList.remove('hidden');
-            guideContainer.classList.remove('hidden');
-            studentListInput.focus();
-        }
-
-        function initClasslistGenerator() {
-            if (!parseAndStoreStudentData()) return;
-            step1Container.classList.add('hidden');
-            guideContainer.classList.add('hidden');
-            classlistSetupContainer.classList.remove('hidden');
-            setupSorting();
-            setupColumnReordering();
-            renderClasslist();
-        }
-
-        function initGroupsGenerator() {
-            if (!parseAndStoreStudentData()) return;
-            step1Container.classList.add('hidden');
-            guideContainer.classList.add('hidden');
-            groupsSetupContainer.classList.remove('hidden');
-            studentSelectionList.innerHTML = '';
-            studentData.forEach((student, index) => {
-                createCheckbox(studentSelectionList, `student-${index}`, student.formattedName, true);
-            });
-        }
-
-        function setupSorting() {
-            sortOptionsContainer.innerHTML = '';
-            const sortKeys = { original: 'Original', formattedName: 'Fornamn', lastName: 'Etternamn', className: 'Klasse' };
-            Object.entries(sortKeys).forEach(([key, value], index) => {
-                const item = createCheckbox(sortOptionsContainer, `sort-${key}`, value, index === 0, 'radio');
-                const radio = item.querySelector('input');
-                radio.name = 'sort-option';
-                radio.addEventListener('change', () => {
-                    sortStudentData(key);
-                    renderClasslist();
-                });
-            });
-        }
-
-        function sortStudentData(key) {
-            if (key === 'original') {
-                studentData.sort((a, b) => a.originalIndex - b.originalIndex);
-            } else {
-                studentData.sort((a, b) => a[key].localeCompare(b[key], 'nn'));
+        // Omsetjingar
+        const translations = {
+            nn: {
+                pageTitle: "Terningtrillar for Grupper",
+                mainTitle: "Terningtrillar",
+                groupsLabel: "Tal på grupper",
+                diceLabel: "Terningar per gruppe",
+                startButton: "Start spel",
+                rollButton: "Trill terningar",
+                clearButtonTitle: "Tøm",
+                settingsButtonTitle: "Innstillingar",
+                groupTitle: "Gruppe"
+            },
+            nb: {
+                pageTitle: "Terningkaster for Grupper",
+                mainTitle: "Terningkaster",
+                groupsLabel: "Antall grupper",
+                diceLabel: "Terninger per gruppe",
+                startButton: "Start spill",
+                rollButton: "Trill terninger",
+                clearButtonTitle: "Tøm",
+                settingsButtonTitle: "Innstillinger",
+                groupTitle: "Gruppe"
+            },
+            en: {
+                pageTitle: "Dice Roller for Groups",
+                mainTitle: "Dice Roller",
+                groupsLabel: "Number of groups",
+                diceLabel: "Dice per group",
+                startButton: "Start game",
+                rollButton: "Roll dice",
+                clearButtonTitle: "Clear",
+                settingsButtonTitle: "Settings",
+                groupTitle: "Group"
             }
-        }
-        
-        function setupColumnReordering() {
-            columnSelectionContainer.innerHTML = '';
-            columnOrder.forEach(key => {
-                const item = document.createElement('div');
-                item.className = 'draggable-item';
-                item.draggable = true;
-                item.dataset.key = key;
-                
-                const checkbox = createCheckbox(item, `col-${key}`, columnDetails[key], true);
-                checkbox.querySelector('input').addEventListener('change', renderClasslist);
-                
-                columnSelectionContainer.appendChild(item);
-            });
-            addDragDropListeners();
-        }
+        };
+        let currentLanguage = 'nn';
 
-        function addDragDropListeners() {
-            const draggables = columnSelectionContainer.querySelectorAll('.draggable-item');
-            draggables.forEach(draggable => {
-                draggable.addEventListener('dragstart', () => draggable.classList.add('dragging'));
-                draggable.addEventListener('dragend', () => draggable.classList.remove('dragging'));
-            });
-            columnSelectionContainer.addEventListener('dragover', e => {
-                e.preventDefault();
-                const afterElement = getDragAfterElement(columnSelectionContainer, e.clientY);
-                const dragging = document.querySelector('.dragging');
-                if (afterElement == null) {
-                    columnSelectionContainer.appendChild(dragging);
-                } else {
-                    columnSelectionContainer.insertBefore(dragging, afterElement);
-                }
-            });
-            columnSelectionContainer.addEventListener('drop', () => {
-                const newOrder = [...columnSelectionContainer.querySelectorAll('.draggable-item')].map(item => item.dataset.key);
-                columnOrder = newOrder;
-                renderClasslist();
-            });
-        }
+        // SVG-konstantar
+        const placeholderSVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="#3b3b3b" stroke="#495057" stroke-width="3"/></svg>`;
+        const rollingSVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><text x="50" y="68" font-family="Inter, sans-serif" font-size="50" text-anchor="middle" fill="#495057">?</text></svg>`;
+        const diceFacesSVG = [
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="50" cy="50" r="10" fill="black"/></svg>`,
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="25" cy="25" r="10" fill="black"/><circle cx="75" cy="75" r="10" fill="black"/></svg>`,
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="25" cy="25" r="10" fill="black"/><circle cx="50" cy="50" r="10" fill="black"/><circle cx="75" cy="75" r="10" fill="black"/></svg>`,
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="25" cy="25" r="10" fill="black"/><circle cx="75" cy="25" r="10" fill="black"/><circle cx="25" cy="75" r="10" fill="black"/><circle cx="75" cy="75" r="10" fill="black"/></svg>`,
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="25" cy="25" r="10" fill="black"/><circle cx="75" cy="25" r="10" fill="black"/><circle cx="50" cy="50" r="10" fill="black"/><circle cx="25" cy="75" r="10" fill="black"/><circle cx="75" cy="75" r="10" fill="black"/></svg>`,
+            `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="90" height="90" rx="10" fill="white" stroke="black" stroke-width="3"/><circle cx="25" cy="25" r="10" fill="black"/><circle cx="75" cy="25" r="10" fill="black"/><circle cx="25" cy="50" r="10" fill="black"/><circle cx="75" cy="50" r="10" fill="black"/><circle cx="25" cy="75" r="10" fill="black"/><circle cx="75" cy="75" r="10" fill="black"/></svg>`
+        ];
 
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
+        // Set språk for alle element
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.documentElement.lang = lang;
 
-        function renderClasslist() {
-            const columns = {};
-            columnOrder.forEach(key => {
-                const checkbox = document.getElementById(`col-${key}`);
-                columns[key] = checkbox ? checkbox.checked : true;
-            });
-
-            const listContent = studentData.map(student => {
-                let line = [];
-                columnOrder.forEach(key => {
-                    if (columns[key]) {
-                        let value = '';
-                        if (key === 'fornamn') {
-                            value = student.formattedName;
-                        } else if (key === 'etternamn') {
-                            value = student.lastName;
-                        } else if (key === 'klasse') {
-                            value = student.className;
-                        }
-                        line.push(value || '');
+            document.querySelectorAll('[data-key]').forEach(elem => {
+                const key = elem.getAttribute('data-key');
+                const translation = translations[lang][key];
+                if (translation) {
+                    if (elem.hasAttribute('title')) {
+                        elem.setAttribute('title', translation);
+                    } else {
+                        elem.textContent = translation;
                     }
-                });
-                return line.join(' ');
-            }).join('\n');
-            classlistOutput.textContent = listContent;
-        }
-
-        function copyClasslist() {
-            copyToClipboard(classlistOutput.textContent, copyListButton, "Kopier liste");
-        }
-
-        function generateGroups() {
-            resultsContainer.innerHTML = '';
-            const selectedCheckboxes = studentSelectionList.querySelectorAll('input[type="checkbox"]:checked');
-            const selectedStudents = Array.from(selectedCheckboxes).map(cb => cb.dataset.name);
-            const numGroups = parseInt(groupCountInput.value, 10);
-            if (selectedStudents.length === 0) { showError("Du må velje minst éin elev."); return; }
-            if (isNaN(numGroups) || numGroups < 1) { showError("Talet på grupper må vere eit positivt tal."); return; }
-            if (numGroups > selectedStudents.length) { showError("Du kan ikkje ha fleire grupper enn valde elevar."); return; }
-            const shuffledStudents = shuffleArray(selectedStudents);
-            const groups = createGroups(shuffledStudents, numGroups);
-            displayGroups(groups);
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.remove('hidden');
-        }
-
-        function parseAndStoreStudentData() {
-            errorMessage.classList.add('hidden');
-            const rawText = studentListInput.value.trim();
-            if (rawText === '') { showError("Elevlista kan ikkje vere tom."); return false; }
-            const lines = rawText.split('\n').filter(line => line.trim() !== '');
-            try {
-                studentData = parseStudentList(lines);
-                if (studentData.length === 0) { showError("Fann ingen gyldige elevnamn i lista. Sjekk formatet."); return false; }
-                return true;
-            } catch (error) {
-                showError(error.message);
-                return false;
-            }
-        }
-
-        function parseStudentList(lines) {
-            if (lines.length === 0) return [];
-            const words1 = lines[0].trim().split(/\s+/);
-            const words2 = lines.length > 1 ? lines[1].trim().split(/\s+/) : words1;
-            let teacherNameWords = [];
-            let i = 1;
-            while (words1.length - i >= 0 && words2.length - i >= 0 && words1[words1.length - i] === words2[words2.length - i]) {
-                teacherNameWords.unshift(words1[words1.length - i]);
-                i++;
-            }
-            if (teacherNameWords.length === 0 && lines.length > 1) { throw new Error("Kunne ikkje identifisere eit felles lærarnamn. Sjekk formatet."); }
-            const teacherName = teacherNameWords.join(' ');
-            const students = lines.map((line, index) => {
-                const studentPart = line.trim().substring(0, line.trim().lastIndexOf(teacherName)).trim();
-                const parts = studentPart.split(/\s+/);
-                if (parts.length < 3) return null;
-                return { originalIndex: index, className: parts[1], firstName: parts[2], lastName: parts.slice(3).join(' ') };
-            }).filter(Boolean);
-            const firstNameCounts = students.reduce((acc, student) => {
-                acc[student.firstName] = (acc[student.firstName] || 0) + 1;
-                return acc;
-            }, {});
-            return students.map(student => {
-                let formattedName = student.firstName;
-                if (firstNameCounts[student.firstName] > 1 && student.lastName) {
-                    const initials = student.lastName.split(/\s+/).map(part => part.charAt(0).toUpperCase() + '.').join(' ');
-                    formattedName = `${student.firstName} ${initials}`;
                 }
-                return { ...student, formattedName };
             });
-        }
+            
+            document.title = translations[lang].pageTitle;
 
-        function shuffleArray(array) {
-            const shuffled = [...array];
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
-        function createGroups(students, numGroups) {
-            const groups = Array.from({ length: numGroups }, () => []);
-            students.forEach((student, index) => {
-                groups[index % numGroups].push(student);
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
             });
-            return groups;
-        }
 
-        function displayGroups(groups) {
-            resultsContainer.innerHTML = '';
-            groups.forEach((group, index) => {
-                const groupCard = document.createElement('div');
-                groupCard.className = 'group-card';
-                const header = document.createElement('div');
-                header.className = 'group-card-header';
-                const title = document.createElement('h3');
-                title.textContent = `Gruppe ${index + 1}`;
-                const copyButton = document.createElement('button');
-                copyButton.className = 'copy-btn';
-                copyButton.textContent = 'Kopier';
-                copyButton.onclick = () => copyToClipboard(`Gruppe ${index + 1}:\n` + group.join('\n'), copyButton, "Kopier");
-                header.appendChild(title);
-                header.appendChild(copyButton);
-                const list = document.createElement('ul');
-                group.forEach(student => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = student;
-                    list.appendChild(listItem);
+            // Oppdater gruppetitlar viss spelet er i gang
+            if (!gameContainer.classList.contains('hidden')) {
+                document.querySelectorAll('.group-container h2').forEach((titleElem, index) => {
+                    titleElem.textContent = `${translations[currentLanguage].groupTitle} ${index + 1}`;
                 });
-                groupCard.appendChild(header);
-                groupCard.appendChild(list);
-                resultsContainer.appendChild(groupCard);
+            }
+        }
+
+        function createGameBoard(numGroups, numDice) {
+            gameBoard.innerHTML = '';
+            const useTwoColumns = parseInt(numGroups) > 3;
+            
+            if (useTwoColumns) {
+                gameBoard.classList.add('two-columns');
+            } else {
+                gameBoard.classList.remove('two-columns');
+            }
+
+            for (let i = 1; i <= numGroups; i++) {
+                const groupContainer = document.createElement('div');
+                groupContainer.classList.add('group-container');
+
+                if (numGroups == 1) {
+                    groupContainer.classList.add('single-group');
+                }
+                
+                if (numGroups > 1) {
+                    const groupTitle = document.createElement('h2');
+                    groupTitle.textContent = `${translations[currentLanguage].groupTitle} ${i}`;
+                    groupContainer.appendChild(groupTitle);
+                }
+
+                const diceRow = document.createElement('div');
+                diceRow.classList.add('dice-row');
+                for (let j = 0; j < numDice; j++) {
+                    const dieElement = document.createElement('div');
+                    dieElement.classList.add('die');
+                    dieElement.innerHTML = placeholderSVG;
+                    diceRow.appendChild(dieElement);
+                }
+                groupContainer.appendChild(diceRow);
+                gameBoard.appendChild(groupContainer);
+            }
+        }
+
+        function rollAllDice() {
+            const allDice = document.querySelectorAll('.die');
+            allDice.forEach(die => {
+                die.classList.remove('rolling');
+                void die.offsetWidth;
+                die.innerHTML = rollingSVG;
+                die.classList.add('rolling');
+                const randomNumber = Math.floor(Math.random() * 6);
+                setTimeout(() => {
+                    die.innerHTML = diceFacesSVG[randomNumber];
+                    die.classList.remove('rolling');
+                }, 600);
             });
         }
         
-        function createCheckbox(container, id, labelText, isChecked, type = 'checkbox') {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'checkbox-item';
-            const checkbox = document.createElement('input');
-            checkbox.type = type;
-            checkbox.id = id;
-            checkbox.checked = isChecked;
-            checkbox.dataset.name = labelText;
-            const label = document.createElement('label');
-            label.htmlFor = id;
-            label.textContent = labelText;
-            label.className = 'cursor-pointer select-none';
-            itemDiv.appendChild(checkbox);
-            itemDiv.appendChild(label);
-            container.appendChild(itemDiv);
-            return itemDiv;
+        function clearBoard() {
+            const allDice = document.querySelectorAll('.die');
+            allDice.forEach(die => {
+                die.innerHTML = placeholderSVG;
+                die.classList.remove('rolling');
+            });
         }
-        
-        function copyToClipboard(text, button, originalText) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            textArea.style.opacity = "0";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                button.textContent = 'Kopiert!';
-                button.classList.add('copied');
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.classList.remove('copied');
-                }, 2000);
-            } catch (err) {
-                console.error('Kunne ikkje kopiere tekst: ', err);
-                showError("Kopiering til utklippstavla mislykkast.");
+
+        function restartGame() {
+            gameContainer.classList.add('hidden');
+            setupContainer.classList.remove('hidden');
+            restartButton.classList.add('hidden');
+            gameBoard.innerHTML = '';
+            gameBoard.classList.remove('two-columns');
+        }
+
+        setupForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const numGroups = document.getElementById('num-groups').value;
+            const numDice = document.getElementById('num-dice').value;
+            createGameBoard(numGroups, numDice);
+            setupContainer.classList.add('hidden');
+            gameContainer.classList.remove('hidden');
+            restartButton.classList.remove('hidden');
+        });
+
+        rollButton.addEventListener('click', rollAllDice);
+        restartButton.addEventListener('click', restartGame);
+        clearButton.addEventListener('click', clearBoard);
+
+        // Lyttar for språkveljar
+        document.getElementById('language-switcher').addEventListener('click', (event) => {
+            const target = event.target.closest('.lang-btn');
+            if (target) {
+                setLanguage(target.dataset.lang);
             }
-            document.body.removeChild(textArea);
-        }
+        });
+
+        // Set initielt språk ved lasting
+        setLanguage('nn');
+
     </script>
+
 </body>
 </html>
