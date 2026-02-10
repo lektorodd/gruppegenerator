@@ -1,9 +1,9 @@
 # Gruppegenerator 🪄
 
-Ta klasselister frå Visma InSchool og lag tilfeldige grupper. 
-Appen kan lastast ned og køyrast lokalt (utan nett). Ingen innsamling av data. 
+Lag tilfeldige grupper og klasselister frå ei enkel namneliste eller frå Visma InSchool.
+Appen kan lastast ned og køyrast lokalt (utan nett). Ingen innsamling av data.
 
-Perfekt til gruppearbeid, tilfeldige klassekart osb. 
+Perfekt til gruppearbeid, tilfeldige klassekart osb.
 
 >[!TIP]
 >
